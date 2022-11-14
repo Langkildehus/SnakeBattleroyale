@@ -1,7 +1,7 @@
 // Load packages
 import processing.net.*;
 
-final String IP = "10.130.146.18";
+final String IP = "10.130.145.103";
 final int PORT = 8080;
 
 // Declare global variables
@@ -112,17 +112,17 @@ void mouseClicked() {
       */
       
       final int reservedBytes = 2;
-      int[] bytes;
+      byte[] bytes;
       readyButton.toggle = !readyButton.toggle;
       if (readyButton.toggle) {
-        bytes = new int[nameBox.text.length() + reservedBytes];
+        bytes = new byte[nameBox.text.length() + reservedBytes];
         bytes[0] = byte(clientSnake);
         bytes[1] = byte(1);
         for (int i = reservedBytes; i < nameBox.text.length() + reservedBytes; i++) {
           bytes[i] = byte(nameBox.text.charAt(i - reservedBytes));
         }
       } else {
-        bytes = new int[reservedBytes];
+        bytes = new byte[reservedBytes];
         bytes[0] = byte(clientSnake);
         bytes[1] = byte(0);
       }

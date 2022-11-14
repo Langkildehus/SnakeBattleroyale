@@ -10,7 +10,6 @@ ArrayList<Client> players = new ArrayList<Client>();
 ArrayList<PVector> fruits;
 ArrayList<Snake> snakes;
 ArrayList<String> names;
-int playerAmount;
 int fruitAmount;
 int state;
 int[] DIM;
@@ -26,7 +25,6 @@ void setup() {
   
   // Initialize variables
   fruitAmount = 4;
-  playerAmount = 1;
   DIM = new int[2];
   DIM[0] = 25;
   DIM[1] = 25;
@@ -46,13 +44,9 @@ void setup() {
 void draw() {
   background(69);
   if (state == 0) {
-    text(playerAmount > 1 ? str(playerAmount) + " players connected" :
-                            str(playerAmount) + " player connected", width / 3, height / 2);
+    text(players.size() > 0 ? str(players.size() + 1) + " players connected" : "1 player connected", width / 3, height / 2);
     readyButton.draw();
     nameBox.draw();
-    
-    
-    if (server.available() != null) {
       
       
       
@@ -62,32 +56,29 @@ void draw() {
       
       
       
-      Client player = server.available();
-      if (player != null) {
-        player.readBytes();
-        byte[] bytes = new byte[5];
-        bytes[0] = byte(0);
-        bytes[1] = byte(fruitAmount);
-        bytes[2] = byte(DIM[0]);
-        bytes[3] = byte(DIM[1]);
-        bytes[4] = byte(playerAmount);
-        player.write(bytes);
-        /*snakes.add(new Snake(startPos[playerAmount * 2], startPos[playerAmount * 2 + 1], DIM, colors[playerAmount * 2],
-                             colors[playerAmount * 2 + 1]));*/
-        playerAmount++;
+    Client player = server.available();
+    if (player != null) {
+      for (Client c : players) {
+        println(c.ip(), player.ip());
+        println(c.ip() == player.ip());
+        println();
+        if (c.ip() == player.ip()) {
+          println("Duplicate");
+          return;
+        }
       }
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      player.readBytes();
+      println(player.ip());
+      byte[] bytes = new byte[5];
+      bytes[0] = byte(0);
+      bytes[1] = byte(fruitAmount);
+      bytes[2] = byte(DIM[0]);
+      bytes[3] = byte(DIM[1]);
+      bytes[4] = byte(players.size() + 1);
+      player.write(bytes);
+      /*snakes.add(new Snake(startPos[playerAmount * 2], startPos[playerAmount * 2 + 1], DIM, colors[playerAmount * 2],
+                           colors[playerAmount * 2 + 1]));*/
+      players.add(player);
     }
   }
 }
