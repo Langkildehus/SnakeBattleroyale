@@ -1,33 +1,31 @@
 class Snake {
-  float x;
-  float y;
+  // Declare variables
   int[] DIM;
   color bodyColor;
   color headColor;
+  PVector delayedTurn;
   
   ArrayList<PVector> body = new ArrayList<PVector>();
   PVector direction = new PVector(0, -1);
-  
   boolean hasMoved = false;
-  int newTail = 3;
-  PVector delayedTurn;
+  int addTail = 3;
   
-  Snake(float x, float y, int[] DIM, color bodyColor, color headColor) {
-    this.x = x;
-    this.y = y;
-    this.body.add(new PVector(x, y));
+  Snake(PVector startPos, int[] DIM, color bodyColor, color headColor) {
+    this.body.add(startPos);
     this.DIM = DIM;
     this.bodyColor = bodyColor;
     this.headColor = headColor;
   }
   
-  void move() {    
+  void move() {
+    // Generate new head
     final PVector oldHead = this.getHead();
-    final PVector newHead = new PVector((this.DIM[0] + oldHead.x + this.direction.x) % this.DIM[0], (this.DIM[1] + oldHead.y + this.direction.y) % this.DIM[1]);
-    this.body.add(newHead);
+    this.body.add(new PVector((this.DIM[0] + oldHead.x + this.direction.x) % this.DIM[0],
+                              (this.DIM[1] + oldHead.y + this.direction.y) % this.DIM[1]));
     
-    if (this.newTail > 0) {
-      this.newTail -= 1;
+    // If no new body pieces need to be created, remove the last body piece
+    if (this.addTail > 0) {
+      this.addTail -= 1;
     } else {
       this.body.remove(0);
     }
@@ -44,6 +42,7 @@ class Snake {
       return;
     }
     
+    // if snake hasn't moved since last direction change, save the direction for later
     if (!this.hasMoved) {
       this.delayedTurn = new PVector(x, y);
     } else {
@@ -54,7 +53,6 @@ class Snake {
   }
   
   PVector getHead() {
-    final PVector head = this.body.get(this.body.size() - 1);
-    return head;
+    return this.body.get(this.body.size() - 1);
   }
 }
