@@ -1,6 +1,6 @@
 class TextBox{
   private int x, y, boxWidth, boxHeight = 40;
-  private int textLimit = 25;
+  private int textLimit = 16;
   private String text = "";
   private char c = '\'';
   private boolean keyReleased = true;
@@ -29,7 +29,7 @@ class TextBox{
   }
 
   void getUserInput(){
-    if ((this.c != BACKSPACE && this.c == key) || this.c == SHIFT) {
+    if ((this.c != BACKSPACE && this.c == key) || key == CODED) {
       return;
     }
 
