@@ -1,7 +1,7 @@
 // Load packages
 import processing.net.*;
 
-final String IP = "10.130.145.103";
+final String IP = "83.92.102.115";
 final int PORT = 8080;
 
 // Declare global variables
@@ -86,6 +86,7 @@ void draw() {
 void keyPressed() {
   if (state == 1) {
     nameBox.getUserInput();
+    updateName();
   } else if (state == 2) {
     if (key == 'w' || key == 'W' || key == UP) {
       snakes.get(clientSnake).setDirection(0, -1);
@@ -129,5 +130,16 @@ void mouseClicked() {
       
       client.write(bytes);
     }
+  }
+}
+
+
+
+void updateName() {
+  final int reserved = 1; // 0: 1 means not a new player
+  byte[] bytes = new byte[reserved + 1];
+  bytes[0] = byte(1);
+  for (int i = 0; i < nameBox.text.length(); i++) {
+    bytes[i + reserved] = byte(nameBox.text.charAt(i));
   }
 }

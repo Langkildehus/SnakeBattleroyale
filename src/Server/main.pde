@@ -6,10 +6,8 @@ final int PORT = 8080;
 // Declare global variables
 Server server;
 Game game;
-ArrayList<Client> players = new ArrayList<Client>();
+ArrayList<Player> players;
 ArrayList<PVector> fruits;
-ArrayList<Snake> snakes;
-ArrayList<String> names;
 int fruitAmount;
 int state;
 int[] DIM;
@@ -28,14 +26,14 @@ void setup() {
   DIM = new int[2];
   DIM[0] = 25;
   DIM[1] = 25;
-  snakes = new ArrayList<Snake>();
-  names = new ArrayList<String>();
-  names.add("");
+  players = new ArrayList<Player>();
+  Player host = new Player(null);
+  host.ready = true;
+  players.add(host);
+  
   state = 0;
   nameBox = new TextBox(width / 4 - width / 6, round(height / 1.8), width / 3, height / 12);
   readyButton = new Button(width / 4 - width / 10, round(height / 1.5), width / 5, height / 12, "START!");
-  
-  generateLevel();
   
   // Start server
   server = new Server(this, 8080);
@@ -46,16 +44,17 @@ void setup() {
 void draw() {
   background(69);
   if (state == 0) {
-    names.set(0, nameBox.text);
+    players.get(0).name = nameBox.text;
     line(width / 2, 0, width / 2, height);
-    text(players.size() > 0 ? str(players.size() + 1) + " players connected" : "1 player connected", width / 4, height / 2);
+    text(players.size() > 1 ? str(players.size()) + " players connected" : "1 player connected", width / 4, height / 2);
     readyButton.draw();
     nameBox.draw();
     
     textAlign(LEFT);
-    for (int i = 0; i < names.size(); i++) {
-      text(names.get(i), width / 1.75, height / 11 * (i + 1));
-      text("READY", width / 1.2, height / 11 * (i + 1));
+    for (int i = 0; i < players.size(); i++) {
+      final Player player = players.get(i);
+      text(player.name, width / 1.8, height / 11 * (i + 1));
+      text(player.ready ? "READY" : "...", width / 1.2, height / 11 * (i + 1));
     }
     textAlign(CENTER);
       
@@ -71,13 +70,13 @@ void draw() {
     if (player != null) {
       final byte[] rbytes = player.readBytes();
       for (int i = 0; i < players.size(); i++) {
-        if (players.get(i).ip().equals(player.ip())) {
+        if (players.get(i).client.ip().equals(player.ip())) {
           if (int(rbytes[0]) == 1) {
             String name = "";
-            for (int i2 = 2; i < rbytes.length; i++) {
+            for (int i2 = 1; i < rbytes.length; i++) {
               name += str(rbytes[i2]);
             }
-            names.set(i, name);
+            players.get(i).name = name;
           }
           return;
         }
@@ -93,8 +92,7 @@ void draw() {
       player.write(bytes);
       /*snakes.add(new Snake(startPos[playerAmount * 2], startPos[playerAmount * 2 + 1], DIM, colors[playerAmount * 2],
                            colors[playerAmount * 2 + 1]));*/
-      players.add(player);
-      names.add(player.ip());
+      players.add(new Player(player));
     }
   }
 }
@@ -103,7 +101,7 @@ void draw() {
 
 void generateLevel() {
   fruits = new ArrayList<PVector>();
-  for (int i = 0; i < snakes.size(); i++) {
+  for (int i = 0; i < players.size(); i++) {
     // Reset all snake positions
     //snakes.set(i, new Snake(startPos[2 * i], startPos[2 * i + 1], DIM, colors[2 * i], colors[2 * i + 1]));
   }
@@ -128,8 +126,8 @@ void generateFood(int amount) {
         }
       }
       
-      for (Snake snake : snakes) {
-        for (PVector pos : snake.body) {
+      for (Player player : players) {
+        for (PVector pos : player.snake.body) {
           if (pos.x == x && pos.y == y) {
             badPos = true;
             break;
@@ -154,13 +152,13 @@ void keyPressed() {
     nameBox.getUserInput();
   } else if (state == 2) {
     if (key == 'w' || key == 'W' || key == UP) {
-      snakes.get(0).setDirection(0, -1);
+      players.get(0).snake.setDirection(0, -1);
     } else if (key == 'a' || key == 'A' || key == LEFT) {
-      snakes.get(0).setDirection(-1, 0);
+      players.get(0).snake.setDirection(-1, 0);
     } else if (key == 's' || key == 'S' || key == DOWN) {
-      snakes.get(0).setDirection(0, 1);
+      players.get(0).snake.setDirection(0, 1);
     } else if (key == 'd' || key == 'D' || key == RIGHT) {
-      snakes.get(0).setDirection(1, 0);
+      players.get(0).snake.setDirection(1, 0);
     }
   }
 }
@@ -171,6 +169,8 @@ void mouseClicked() {
   if (state == 0) {
     if (readyButton.hovering() && readyButton.enabled) {
       readyButton.toggle = !readyButton.toggle;
+      generateLevel();
+      state = 1;
     }
   }
 }
