@@ -20,7 +20,7 @@ class TextBox{
     
     // Draw text
     fill(255);
-    text(this.text + this.getCursor(), this.x + this.boxWidth / 2, this.y + this.boxHeight / 2 + 15);
+    text(this.text, this.x + this.boxWidth / 2, this.y + this.boxHeight / 2 + 15);
     
     if(!keyPressed){
       this.keyReleased = true;
@@ -42,10 +42,6 @@ class TextBox{
     }
 
     this.keyReleased = false;
-  }
-
-  String getCursor() {
-    return (this.hovering() && (frameCount>>5 & 1) == 0 ? "|" : "");
   }
 
   boolean hovering(){

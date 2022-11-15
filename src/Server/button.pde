@@ -5,7 +5,6 @@ class Button {
   int buttonHeight;
   String text;
   boolean toggle = false;
-  boolean enabled = false;
   
   Button(int x, int y, int buttonWidth, int buttonHeight, String text) {
     this.x = x;
@@ -20,8 +19,6 @@ class Button {
     stroke(205);
     if (this.toggle) {
       fill(0, 255, 0);
-    } else if (!this.enabled) {
-      fill(50);
     }else if (this.hovering()) {
       fill(125);
     } else {
