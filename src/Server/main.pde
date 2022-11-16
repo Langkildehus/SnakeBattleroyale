@@ -66,7 +66,7 @@ void draw() {
     // Update ready/name
     Client player = server.available();
     if (player != null) {
-      byte[] rbytes = player.readBytes();
+      final byte[] rbytes = player.readBytes();
       for (int i = 1; i < players.size(); i++) {
         Player p = players.get(i);
         if (p.client.ip().equals(player.ip())) {
@@ -92,6 +92,9 @@ void draw() {
     // Game running
     if (frameCount % 10 == 0) {
       players.get(0).snake.move();
+    }
+    if (frameCount % 3 == 0) {
+      updateClients();
     }
     
     game.show();
@@ -136,5 +139,22 @@ void mouseClicked() {
 
 
 void startGame() {
-  server.write(byte(1));
+  final int reserved = 2;
+  int nameLen = 0;
+  for (Player p : players) {
+    nameLen += p.name.length() + 1;
+  }
+  byte[] bytes = new byte[reserved + nameLen];
+  bytes[0] = byte(1);
+  bytes[1] = byte(players.size());
+  int nextByte = reserved;
+  for (Player player : players) {
+    bytes[nextByte] = byte(player.name.length());
+    nextByte++;
+    for (int i = 0; i < player.name.length(); i++) {
+      bytes[nextByte] = byte(player.name.charAt(i));
+      nextByte++;
+    }
+  }
+  server.write(bytes);
 }

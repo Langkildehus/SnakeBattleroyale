@@ -4,17 +4,19 @@ class Snake {
   color bodyColor;
   color headColor;
   PVector delayedTurn;
+  String name;
   
   ArrayList<PVector> body = new ArrayList<PVector>();
   PVector direction = new PVector(0, -1);
   boolean hasMoved = false;
   int addTail = 3;
   
-  Snake(PVector startPos, int[] DIM, color bodyColor, color headColor) {
+  Snake(PVector startPos, int[] DIM, color bodyColor, color headColor, String name) {
     this.body.add(startPos);
     this.DIM = DIM;
     this.bodyColor = bodyColor;
     this.headColor = headColor;
+    this.name = name;
   }
   
   void move() {

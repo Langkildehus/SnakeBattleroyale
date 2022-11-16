@@ -27,6 +27,7 @@ void setup() {
   // Initialize variables
   DIM = new int[2];
   snakes = new ArrayList<Snake>();
+  fruits = new ArrayList<PVector>();
   state = 0;
   nameBox = new TextBox(width / 2 - width / 6, height / 2, width / 3, height / 12);
   readyButton = new Button(width / 2 - width / 10, round(height / 1.5), width / 5, height / 12, "READY!");
@@ -58,10 +59,7 @@ void draw() {
     readyButton.draw();
     
     if (client.available() > 0) {
-      final byte[] bytes = client.readBytes();
-      if (int(bytes[0]) == 1) {
-        state = 2;
-      }
+      startGame();
     }
     
   } else {
@@ -75,6 +73,10 @@ void draw() {
     
     if (frameCount % 10 == 0) {
       snakes.get(clientSnake).move();
+    }
+    
+    if (client.available() > 0) {
+      handleInput();
     }
   }
 }

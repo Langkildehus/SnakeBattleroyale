@@ -1,6 +1,15 @@
 void updateClients() {
   final int reserved = 2;
-  byte[] bytes = new byte[reserved + 2 * fruitAmount];
+  
+  int bodies = 0;
+  for (Player player : players) {
+    for (PVector pos : player.snake.body) {
+      bodies += 2;
+    }
+    bodies++;
+  }
+  
+  byte[] bytes = new byte[reserved + 2 * fruitAmount + bodies];
   // RESERVED BYTES
   bytes[0] = byte(1);
   bytes[1] = byte(0);
