@@ -65,20 +65,17 @@ void draw() {
   } else {
     // Game running
     
-    println("FRUGTER:");
-    for (PVector fruit : fruits) println(fruit);
-    println("SNAKES:");
-    for (Snake snake : snakes) println(snake.body);
-    
-    
     game.show();
     for (Snake snake : snakes) {
-      game.draw(snake.body, snake.bodyColor, snake.headColor);
+      if (snake.alive) {
+        game.draw(snake.body, snake.bodyColor, snake.headColor);
+      }
     }
     game.draw(fruits, #FF0000);
     
-    if (frameCount % framerate == 0) {
+    if (frameCount % framerate == 0 && snakes.get(clientSnake).alive) {
       snakes.get(clientSnake).move();
+      updateServer();
     }
     
     if (client.available() > 0) {

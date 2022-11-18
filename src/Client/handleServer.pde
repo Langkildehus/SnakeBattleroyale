@@ -55,21 +55,20 @@ void startGame() {
     for (int i = 0; i < fruitAmount; i++) {
       fruits.add(new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1])));
       nextByte += 2;
-      println(int(bytes[nextByte]), int(bytes[nextByte + 1]));
-      println("#####################");
     }
     
     // Recieve snakes
     for (int i = 0; i < snakes.size(); i++) {
-      snakes.get(i).body = new ArrayList<PVector>();
+      Snake snake = snakes.get(i);
+      snake.body = new ArrayList<PVector>();
       while (int(bytes[nextByte]) != 255) {
         final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
-        snakes.get(i).body.add(pos);
+        snake.body.add(pos);
         nextByte += 2;
       }
-      println(snakes.get(i).body);
-      println("---------------");
-      nextByte++;
+      snake.addTail += int(bytes[nextByte + 1]);
+      snake.alive = boolean(bytes[nextByte + 2]);
+      nextByte += 3;
     }
     
     // Recieve snake colors
@@ -100,17 +99,33 @@ void updateName() {
 
 void getSnakes(byte[] bytes, int nextByte) {
   for (int i = 0; i < snakes.size(); i++) {
+    Snake snake = snakes.get(i);
     if (clientSnake != i) {
-      snakes.get(i).body = new ArrayList<PVector>();
+      snake.body = new ArrayList<PVector>();
     }
     
     while (int(bytes[nextByte]) != 255) {
       final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
       if (i != clientSnake) {
-        snakes.get(i).body.add(pos);
+        snake.body.add(pos);
       }
       nextByte += 2;
     }
-    nextByte++;
+    snake.addTail += int(bytes[nextByte + 1]);
+    snake.alive = boolean(bytes[nextByte + 2]);
+    nextByte += 3;
   }
+}
+
+
+
+void updateServer() {
+  ArrayList<PVector> snakeBody = snakes.get(clientSnake).body;
+  byte[] bytes = new byte[2 * snakes.get(clientSnake).body.size()];
+  
+  for (int i = 0; i < snakeBody.size(); i++) {
+    bytes[2 * i] = byte(snakeBody.get(i).x);
+    bytes[2 * i + 1] = byte(snakeBody.get(i).y);
+  }
+  client.write(bytes);
 }

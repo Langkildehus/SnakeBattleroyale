@@ -4,6 +4,14 @@ import java.util.Arrays;
 
 final int PORT = 8080;
 
+final color[] colors = {
+  #000099, #0000FF,
+  #009900, #00FF00,
+  #009999, #00FFFF,
+  #996633, #885522,
+  #888800, #999911,
+};
+
 // Declare global variables
 Server server;
 Game game;
@@ -93,16 +101,68 @@ void draw() {
     }
   } else if (state == 1) {
     // Game running
-    if (frameCount % framerate == 0) {
+    
+    boolean update = false;
+    
+    for (int i = 1; i < players.size(); i++) {
+      Player player = players.get(i);
+      if (player.alive && player.client.available() > 0) {
+        update = true;
+        handlePlayer(player);
+      }
+    }
+    
+    if (frameCount % framerate == 0 && players.get(0).alive) {
+      update = true;
       players.get(0).snake.move();
     }
+    
+    if (update) {
+      for (int p = 0; p < players.size(); p++) {
+        Player player = players.get(p);
+        if (!player.alive) {
+          continue;
+        }
+        
+        final PVector head = player.snake.getHead();
+        
+        // Check if fruit has been eaten
+        for (int i = 0; i < fruitAmount; i++) {
+          if (head.x == fruits.get(i).x && head.y == fruits.get(i).y) {
+            player.snake.addTail++;
+            fruits.remove(i);
+            generateFood(1);
+          }
+        }
+        
+        // Check if snake hit another snake
+        for (int i = 0; i < players.size(); i++) {
+          Player player2 = players.get(i);
+          if (i == p || !player2.alive) {
+            continue;
+          } else if (!player.alive) {
+            break;
+          }
+          
+          for (PVector body : player2.snake.body) {
+            if (head.x == body.x && head.y == body.y) {
+              player.alive = false;
+              break;
+            }
+          }
+        }
+      }
+    }
+    
     if (frameCount % 3 == 0) {
       updateClients();
     }
     
     game.show();
     for (Player player : players) {
-      game.draw(player.snake.body, player.snake.bodyColor, player.snake.headColor);
+      if (player.alive) {
+        game.draw(player.snake.body, player.snake.bodyColor, player.snake.headColor);
+      }
     }
     game.draw(fruits, #FF0000);
   }

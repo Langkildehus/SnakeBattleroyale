@@ -5,6 +5,7 @@ class Player {
   String name = "";
   Snake snake;
   boolean ready = false;
+  boolean alive = true;
   
   Player(Client client) {
     this.client = client;

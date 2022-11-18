@@ -5,7 +5,6 @@ void generateLevel() {
   spawnSnakes();
   fruits = new ArrayList<PVector>();
   generateFood(fruitAmount);
-  for (PVector fruit : fruits) println("FRUIT:", fruit);
 }
 
 
@@ -13,7 +12,11 @@ void generateLevel() {
 void spawnSnakes() {
   for (int i = 0; i < players.size(); i++) {
     // Reset all snake positions
-    players.get(i).snake = new Snake(spawnpoints.get(i % spawnpoints.size()), DIM, #0000FF, #000099);
+    players.get(i).snake = new Snake(spawnpoints.get(i % spawnpoints.size()), DIM,
+                                     colors[(2 * i) % colors.length], colors[(2 * i + 1) % colors.length]);
+    if (i != 0) {
+      players.get(i).snake.addTail = 0;
+    }
   }
 }
 

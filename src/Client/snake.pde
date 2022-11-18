@@ -9,6 +9,7 @@ class Snake {
   ArrayList<PVector> body = new ArrayList<PVector>();
   PVector direction = new PVector(0, -1);
   boolean hasMoved = false;
+  boolean alive = true;
   int addTail = 3;
   
   Snake(PVector startPos, int[] DIM, color bodyColor, color headColor, String name) {
