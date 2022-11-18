@@ -27,9 +27,6 @@ void handleInput() {
     DIM[1] = int(bytes[3]);
     framerate = int(bytes[4]);
     clientSnake = int(bytes[5]);
-    for (int i = 0; i < fruitAmount; i++) {
-      fruits.add(new PVector(0, 0));
-    }
   }
 }
 

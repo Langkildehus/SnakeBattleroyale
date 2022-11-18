@@ -138,17 +138,26 @@ void draw() {
         // Check if snake hit another snake
         for (int i = 0; i < players.size(); i++) {
           Player player2 = players.get(i);
-          if (i == p || !player2.alive) {
+          if (!player2.alive) {
             continue;
           } else if (!player.alive) {
             break;
           }
           
+          int iter = 0;
           for (PVector body : player2.snake.body) {
             if (head.x == body.x && head.y == body.y) {
+              if (i == p) {
+                if (iter != player2.snake.body.size() - 1) {
+                  player.alive = false;
+                  break;
+                }
+              } else {
               player.alive = false;
               break;
+              }
             }
+            iter++;
           }
         }
       }

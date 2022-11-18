@@ -71,6 +71,8 @@ void draw() {
         game.draw(snake.body, snake.bodyColor, snake.headColor);
       }
     }
+    for (PVector fruit : fruits) println("FRUIT:", fruit);
+    println("----------");
     game.draw(fruits, #FF0000);
     
     if (frameCount % framerate == 0 && snakes.get(clientSnake).alive) {
