@@ -66,14 +66,16 @@ void draw() {
     // Game running
     
     game.show();
+    
+    game.draw(fruits, #FF0000);
+    
     for (Snake snake : snakes) {
       if (snake.alive) {
         game.draw(snake.body, snake.bodyColor, snake.headColor);
+        text(snake.name, (game.w / DIM[0]) * (snake.getHead().x + 0.5) + game.x,
+                          (game.h / DIM[1]) * (snake.getHead().y - 0.5));
       }
     }
-    for (PVector fruit : fruits) println("FRUIT:", fruit);
-    println("----------");
-    game.draw(fruits, #FF0000);
     
     if (frameCount % framerate == 0 && snakes.get(clientSnake).alive) {
       snakes.get(clientSnake).move();

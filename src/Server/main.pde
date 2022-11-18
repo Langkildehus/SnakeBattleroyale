@@ -168,12 +168,16 @@ void draw() {
     }
     
     game.show();
+    
+    game.draw(fruits, #FF0000);
+    
     for (Player player : players) {
       if (player.alive) {
         game.draw(player.snake.body, player.snake.bodyColor, player.snake.headColor);
+        text(player.name, (game.w / DIM[0]) * (player.snake.getHead().x + 0.5) + game.x,
+                          (game.h / DIM[1]) * (player.snake.getHead().y - 0.5));
       }
     }
-    game.draw(fruits, #FF0000);
   }
 }
 
