@@ -9,9 +9,9 @@ Client client;
 Game game;
 ArrayList<PVector> fruits;
 ArrayList<Snake> snakes;
-ArrayList<String> names;
 int fruitAmount;
 int clientSnake;
+int framerate;
 int state;
 int[] DIM;
 TextBox nameBox;
@@ -65,13 +65,19 @@ void draw() {
   } else {
     // Game running
     
+    println("FRUGTER:");
+    for (PVector fruit : fruits) println(fruit);
+    println("SNAKES:");
+    for (Snake snake : snakes) println(snake.body);
+    
+    
     game.show();
     for (Snake snake : snakes) {
       game.draw(snake.body, snake.bodyColor, snake.headColor);
     }
     game.draw(fruits, #FF0000);
     
-    if (frameCount % 10 == 0) {
+    if (frameCount % framerate == 0) {
       snakes.get(clientSnake).move();
     }
     

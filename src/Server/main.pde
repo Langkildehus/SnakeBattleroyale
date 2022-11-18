@@ -12,6 +12,7 @@ ArrayList<PVector> fruits;
 ArrayList<PVector> spawnpoints;
 int fruitAmount;
 int state;
+int framerate;
 int[] DIM;
 TextBox nameBox;
 Button readyButton;
@@ -28,6 +29,7 @@ void setup() {
   DIM = new int[2];
   DIM[0] = 25;
   DIM[1] = 25;
+  framerate = 10;
   players = new ArrayList<Player>();
   Player host = new Player(null);
   host.ready = true;
@@ -63,7 +65,7 @@ void draw() {
     }
     textAlign(CENTER);
     
-    // Update ready/name
+    // Update ready/name list
     Client player = server.available();
     if (player != null) {
       final byte[] rbytes = player.readBytes();
@@ -79,18 +81,19 @@ void draw() {
       }
       
       // Accept new players
-      byte[] bytes = new byte[5];
+      byte[] bytes = new byte[6];
       bytes[0] = byte(0);
       bytes[1] = byte(fruitAmount);
       bytes[2] = byte(DIM[0]);
       bytes[3] = byte(DIM[1]);
-      bytes[4] = byte(players.size() + 1);
+      bytes[4] = byte(framerate);
+      bytes[5] = byte(players.size());
       player.write(bytes);
       players.add(new Player(player));
     }
   } else if (state == 1) {
     // Game running
-    if (frameCount % 10 == 0) {
+    if (frameCount % framerate == 0) {
       players.get(0).snake.move();
     }
     if (frameCount % 3 == 0) {
@@ -147,6 +150,8 @@ void startGame() {
   byte[] bytes = new byte[reserved + nameLen];
   bytes[0] = byte(1);
   bytes[1] = byte(players.size());
+  
+  // Send player names
   int nextByte = reserved;
   for (Player player : players) {
     bytes[nextByte] = byte(player.name.length());
@@ -156,5 +161,28 @@ void startGame() {
       nextByte++;
     }
   }
-  server.write(bytes);
+  
+  // Send fruits
+  final byte[] frbytes = concat(bytes, getFruitBytes());
+  
+  // Send snakes
+  final byte[] sbytes = concat(frbytes, getSnakeBytes());
+  
+  nextByte = 0;
+  // Send snake colors
+  byte[] colorBytes = new byte[6 * players.size()];
+  for (Player player : players) {
+    colorBytes[nextByte] = byte((player.snake.headColor >> 16) & 0xFF);      // Faster way of getting red(headColor)
+    colorBytes[nextByte + 1] = byte((player.snake.headColor >> 8) & 0xFF);   // Faster way of getting green(headColor)
+    colorBytes[nextByte + 2] = byte(player.snake.headColor & 0xFF);          // Faster way of getting blue(headColor)
+    
+    colorBytes[nextByte + 3] = byte((player.snake.bodyColor >> 16) & 0xFF);  // Faster way of getting red(bodyColor)
+    colorBytes[nextByte + 4] = byte((player.snake.bodyColor >> 8) & 0xFF);   // Faster way of getting green(bodyColor)
+    colorBytes[nextByte + 5] = byte(player.snake.bodyColor & 0xFF);          // Faster way of getting blue(bodyColor)
+    nextByte += 6;
+  }
+  
+  final byte[] fbytes = concat(sbytes, colorBytes);
+  
+  server.write(fbytes);
 }

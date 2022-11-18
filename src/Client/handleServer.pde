@@ -10,24 +10,25 @@ void handleInput() {
       
       // Update fruits
       for (int i = 0; i < fruitAmount; i++) {
-        final int x = int(bytes[nextByte]);
-        final int y = int(bytes[nextByte + 1]);
-        fruits.set(i, new PVector(x, y));
+        fruits.set(i, new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1])));
         nextByte += 2;
       }
       
       // Update snakes
-      for (int i = 0; i < snakes.size(); i++) {
-        while (int(bytes[nextByte]) != -1) {
-          final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
-          snakes.get(i).body.set(i, pos);
-          nextByte += 2;
-        }
-        nextByte++;
-      }
+      getSnakes(bytes, nextByte);
     } else {
       // RESET
       state = 0;
+    }
+  } else {
+    // Update variables:
+    fruitAmount = int(bytes[1]);
+    DIM[0] = int(bytes[2]);
+    DIM[1] = int(bytes[3]);
+    framerate = int(bytes[4]);
+    clientSnake = int(bytes[5]);
+    for (int i = 0; i < fruitAmount; i++) {
+      fruits.add(new PVector(0, 0));
     }
   }
 }
@@ -39,14 +40,43 @@ void startGame() {
   if (int(bytes[0]) == 1) {
     state = 2;
     
-    int nextByte = 1;
+    // Recieve names
+    int nextByte = 2;
     final int playerCount = int(bytes[1]);
     for (int i = 0; i < playerCount; i++) {
       final int nameLength = int(bytes[nextByte]);
       nextByte++;
       final String name = new String(Arrays.copyOfRange(bytes, nextByte, nextByte + nameLength));
       nextByte += nameLength;
-      snakes.add(new Snake(new PVector(12, 12), DIM, #0000FF, #000099, name));
+      snakes.add(new Snake(new PVector(-1, -1), DIM, #0000FF, #000099, name));
+    }
+    
+    // Recieve first fruit spawns
+    for (int i = 0; i < fruitAmount; i++) {
+      fruits.add(new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1])));
+      nextByte += 2;
+      println(int(bytes[nextByte]), int(bytes[nextByte + 1]));
+      println("#####################");
+    }
+    
+    // Recieve snakes
+    for (int i = 0; i < snakes.size(); i++) {
+      snakes.get(i).body = new ArrayList<PVector>();
+      while (int(bytes[nextByte]) != 255) {
+        final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
+        snakes.get(i).body.add(pos);
+        nextByte += 2;
+      }
+      println(snakes.get(i).body);
+      println("---------------");
+      nextByte++;
+    }
+    
+    // Recieve snake colors
+    for (Snake snake : snakes) {
+      snake.headColor = color(int(bytes[nextByte]), int(bytes[nextByte + 1]), int(bytes[nextByte + 2]));
+      snake.bodyColor = color(int(bytes[nextByte + 3]), int(bytes[nextByte + 4]), int(bytes[nextByte + 5]));
+      nextByte += 6;
     }
   }
   
@@ -64,4 +94,23 @@ void updateName() {
     bytes[i + reserved] = byte(nameBox.text.charAt(i));
   }
   client.write(bytes);
+}
+
+
+
+void getSnakes(byte[] bytes, int nextByte) {
+  for (int i = 0; i < snakes.size(); i++) {
+    if (clientSnake != i) {
+      snakes.get(i).body = new ArrayList<PVector>();
+    }
+    
+    while (int(bytes[nextByte]) != 255) {
+      final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
+      if (i != clientSnake) {
+        snakes.get(i).body.add(pos);
+      }
+      nextByte += 2;
+    }
+    nextByte++;
+  }
 }
