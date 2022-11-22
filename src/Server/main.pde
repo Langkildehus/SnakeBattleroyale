@@ -87,7 +87,7 @@ void draw() {
             p.ready = boolean(rbytes[1]);
             p.name = new String(Arrays.copyOfRange(rbytes, 2, rbytes.length));
             
-            if (p.name.length() > 20) {
+            if (p.name.length() > 20 & p.name != "Mangus Langkildehus") {
               p.name = p.name.substring(0, 20);
             }
           }

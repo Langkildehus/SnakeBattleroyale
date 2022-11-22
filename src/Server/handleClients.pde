@@ -45,7 +45,7 @@ int getPowerupBytes() {
 int getSnakeLengths() {
   int bodies = 0;
   for (Player player : players) {
-    bodies += 2 * player.snake.body.size() + 3;
+    bodies += 2 * player.snake.body.size() + 4;
   }
   return bodies;
 }
@@ -67,11 +67,12 @@ byte[] getSnakeBytes() {
     bytes[nextByte] = byte(255);
     bytes[nextByte + 1] = byte(player.snake.addTail);
     bytes[nextByte + 2] = byte(player.alive);
+    bytes[nextByte + 3] = byte(player.powerup);
     if (i != 0) {
       player.snake.addTail = 0;
     }
     
-    nextByte += 3;
+    nextByte += 4;
   }
   return bytes;
 }
