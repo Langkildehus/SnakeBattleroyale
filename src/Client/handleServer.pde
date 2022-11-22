@@ -82,7 +82,8 @@ void startGame() {
       }
       snake.addTail += int(bytes[nextByte + 1]);
       snake.alive = boolean(bytes[nextByte + 2]);
-      nextByte += 3;
+      snake.powerup = int(bytes[nextByte + 3]);
+      nextByte += 4;
     }
     
     // Recieve snake colors

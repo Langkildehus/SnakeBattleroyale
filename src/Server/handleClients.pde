@@ -72,7 +72,7 @@ byte[] getSnakeBytes() {
       player.snake.addTail = 0;
     }
     
-    nextByte += 4;
+    nextByte += 4;  
   }
   return bytes;
 }

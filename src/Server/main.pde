@@ -158,7 +158,7 @@ void draw() {
         for (int i = 0; i < powerups.size(); i++) {
           if (head.x == powerups.get(i).pos.get(0).x && head.y == powerups.get(i).pos.get(0).y) {
             player.powerup = powerups.get(i).type;
-            player.powerupDuration = 10;
+            player.powerupDuration = 300;
             powerups.remove(i);
           }
         }
