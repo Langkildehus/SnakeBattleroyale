@@ -15,7 +15,9 @@ void handleInput() {
       }
       
       // Update snakes
-      getSnakes(bytes, nextByte);
+      nextByte = getSnakes(bytes, nextByte);
+      
+      getPowerups(bytes, nextByte);
     } else {
       // RESET
       state = 0;
@@ -27,6 +29,21 @@ void handleInput() {
     DIM[1] = int(bytes[3]);
     framerate = int(bytes[4]);
     clientSnake = int(bytes[5]);
+  }
+}
+
+
+
+void getPowerups(byte[] bytes, int nextByte) {
+  powerups = new ArrayList<Powerup>();
+  final int powerupAmount = int(bytes[nextByte]);
+  println(powerupAmount);
+  nextByte++;
+  
+  for (int i = 0; i < powerupAmount; i++) {
+    final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
+    powerups.add(new Powerup(pos, int(bytes[nextByte + 2])));
+    nextByte += 3;
   }
 }
 
@@ -94,7 +111,7 @@ void updateName() {
 
 
 
-void getSnakes(byte[] bytes, int nextByte) {
+int getSnakes(byte[] bytes, int nextByte) {
   for (int i = 0; i < snakes.size(); i++) {
     Snake snake = snakes.get(i);
     if (clientSnake != i) {
@@ -112,6 +129,7 @@ void getSnakes(byte[] bytes, int nextByte) {
     snake.alive = boolean(bytes[nextByte + 2]);
     nextByte += 3;
   }
+  return nextByte;
 }
 
 

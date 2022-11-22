@@ -4,6 +4,7 @@ void generateLevel() {
   generateSpawnpoints();
   spawnSnakes();
   fruits = new ArrayList<PVector>();
+  powerups = new ArrayList<Powerup>();
   generateFood(fruitAmount);
 }
 
@@ -33,6 +34,37 @@ void generateSpawnpoints() {
   }
   
   Collections.shuffle(spawnpoints);
+}
+
+
+
+void generatePowerup() {
+  while (true) {
+    boolean badPos = false;
+    float x = round(random(0, DIM[0] - 1));
+    float y = round(random(0, DIM[1] - 1));
+
+    for (PVector pos : fruits) {
+      if (pos.x == x && pos.y == y) {
+        badPos = true;
+        break;
+      }
+    }
+    
+    for (Player player : players) {
+      for (PVector pos : player.snake.body) {
+        if (pos.x == x && pos.y == y) {
+          badPos = true;
+          break;
+        }
+      }
+    }
+
+    if (!badPos) {
+      powerups.add(new Powerup(new PVector(x, y), round(random(1, 3))));
+      break;
+    }
+  }
 }
 
 

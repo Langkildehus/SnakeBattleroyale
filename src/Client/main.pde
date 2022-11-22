@@ -9,6 +9,7 @@ Client client;
 Game game;
 ArrayList<PVector> fruits;
 ArrayList<Snake> snakes;
+ArrayList<Powerup> powerups;
 int fruitAmount;
 int clientSnake;
 int framerate;
@@ -28,6 +29,7 @@ void setup() {
   DIM = new int[2];
   snakes = new ArrayList<Snake>();
   fruits = new ArrayList<PVector>();
+  powerups = new ArrayList<Powerup>();
   state = 0;
   nameBox = new TextBox(width / 2 - width / 6, height / 2, width / 3, height / 12);
   readyButton = new Button(width / 2 - width / 10, round(height / 1.5), width / 5, height / 12, "READY!");
@@ -65,9 +67,21 @@ void draw() {
   } else {
     // Game running
     
+    float speed = 1f;
+    if (snakes.get(clientSnake).powerup == 1) {
+      speed = 2f;
+    } else if (snakes.get(clientSnake).powerup == 2) {
+      speed = 0.5f;
+    } else if (snakes.get(clientSnake).powerup == 3) {
+      speed = 0.8f;
+    }
+    
     game.show();
     
     game.draw(fruits, #FF0000);
+    for (Powerup powerup : powerups) {
+      game.draw(powerup.pos);
+    }
     
     for (Snake snake : snakes) {
       if (snake.alive) {
@@ -77,7 +91,7 @@ void draw() {
       }
     }
     
-    if (frameCount % framerate == 0 && snakes.get(clientSnake).alive) {
+    if (frameCount % int(framerate * speed) == 0 && snakes.get(clientSnake).alive) {
       snakes.get(clientSnake).move();
       updateServer();
     }

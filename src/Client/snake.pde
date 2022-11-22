@@ -11,6 +11,7 @@ class Snake {
   boolean hasMoved = false;
   boolean alive = true;
   int addTail = 3;
+  int powerup = 0;
   
   Snake(PVector startPos, int[] DIM, color bodyColor, color headColor, String name) {
     this.body.add(startPos);

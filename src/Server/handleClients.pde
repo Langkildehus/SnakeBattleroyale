@@ -7,12 +7,37 @@ void updateClients() {
   bytes[1] = byte(0);
   
   // Send fruits
-  byte[] newBytes = concat(bytes, getFruitBytes());
+  final byte[] newBytes = concat(bytes, getFruitBytes());
   
   // Send snakes
-  final byte[] finalBytes = concat(newBytes, getSnakeBytes());
+  final byte[] tempBytes = concat(newBytes, getSnakeBytes());
+  
+  final byte[] finalBytes = concat(tempBytes, getPowerups());
   
   server.write(finalBytes);
+}
+
+
+
+byte[] getPowerups() {
+  byte[] bytes = new byte[getPowerupBytes()];
+  
+  bytes[0] = byte(powerups.size());
+  for (int i = 0; i < powerups.size(); i++) {
+    bytes[3 * i + 1] = byte(powerups.get(i).pos.get(0).x);
+    bytes[3 * i + 2] = byte(powerups.get(i).pos.get(0).y);
+    bytes[3 * i + 3] = byte(powerups.get(i).type);
+  }
+  
+  return bytes;
+}
+
+
+
+int getPowerupBytes() {
+  int bytes = 1;
+  bytes += 3 * powerups.size();
+  return bytes;
 }
 
 

@@ -1,6 +1,6 @@
 class TextBox{
   private int x, y, boxWidth, boxHeight = 40;
-  private int textLimit = 16;
+  private int textLimit = 20;
   private String text = "";
   private char c = '\'';
   private boolean keyReleased = true;

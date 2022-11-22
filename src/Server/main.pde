@@ -18,7 +18,9 @@ Game game;
 ArrayList<Player> players;
 ArrayList<PVector> fruits;
 ArrayList<PVector> spawnpoints;
+ArrayList<Powerup> powerups;
 int fruitAmount;
+int powerupAmount;
 int state;
 int framerate;
 int[] DIM;
@@ -33,10 +35,11 @@ void setup() {
   textSize(64);
   
   // Initialize variables
-  fruitAmount = 4;
+  fruitAmount = 10;
+  powerupAmount = 4;
   DIM = new int[2];
-  DIM[0] = 25;
-  DIM[1] = 25;
+  DIM[0] = 35;
+  DIM[1] = 35;
   framerate = 10;
   players = new ArrayList<Player>();
   Player host = new Player(null);
@@ -83,6 +86,10 @@ void draw() {
           if (int(rbytes[0]) == 1) {
             p.ready = boolean(rbytes[1]);
             p.name = new String(Arrays.copyOfRange(rbytes, 2, rbytes.length));
+            
+            if (p.name.length() > 20) {
+              p.name = p.name.substring(0, 20);
+            }
           }
           return;
         }
@@ -102,17 +109,30 @@ void draw() {
   } else if (state == 1) {
     // Game running
     
+    float speed = 1f;
+    if (players.get(0).powerup == 1) {
+      speed = 2f;
+    } else if (players.get(0).powerup == 2) {
+      speed = 0.5f;
+    } else if (players.get(0).powerup == 3) {
+      speed = 0.8f;
+    }
     boolean update = false;
     
     for (int i = 1; i < players.size(); i++) {
       Player player = players.get(i);
+      if (player.powerupDuration > 0) {
+        player.powerupDuration -= 1;
+      } else {
+        player.powerup = 0;
+      }
       if (player.alive && player.client.available() > 0) {
         update = true;
         handlePlayer(player);
       }
     }
     
-    if (frameCount % framerate == 0 && players.get(0).alive) {
+    if (frameCount % int(framerate * speed) == 0 && players.get(0).alive) {
       update = true;
       players.get(0).snake.move();
     }
@@ -132,6 +152,14 @@ void draw() {
             player.snake.addTail++;
             fruits.remove(i);
             generateFood(1);
+          }
+        }
+        
+        for (int i = 0; i < powerups.size(); i++) {
+          if (head.x == powerups.get(i).pos.get(0).x && head.y == powerups.get(i).pos.get(0).y) {
+            player.powerup = powerups.get(i).type;
+            player.powerupDuration = 10;
+            powerups.remove(i);
           }
         }
         
@@ -163,13 +191,20 @@ void draw() {
       }
     }
     
-    if (frameCount % 3 == 0) {
+    if (frameCount % framerate == 0) {
       updateClients();
+    }
+    
+    if (frameCount % (framerate * 30) == 0 && powerups.size() < powerupAmount) {
+      generatePowerup();
     }
     
     game.show();
     
     game.draw(fruits, #FF0000);
+    for (Powerup powerup : powerups) {
+      game.draw(powerup.pos);
+    }
     
     for (Player player : players) {
       if (player.alive) {

@@ -6,6 +6,8 @@ class Player {
   Snake snake;
   boolean ready = false;
   boolean alive = true;
+  int powerup = 0;
+  int powerupDuration = 0;
   
   Player(Client client) {
     this.client = client;
