@@ -24,6 +24,8 @@ int powerupAmount;
 int state;
 int framerate;
 int[] DIM;
+int countdown;
+int startFrame;
 TextBox nameBox;
 Button readyButton;
 
@@ -117,24 +119,32 @@ void draw() {
     } else if (players.get(0).powerup == 3) {
       speed = 0.8f;
     }
+    
     boolean update = false;
     
-    for (int i = 1; i < players.size(); i++) {
+    for (int i = 0; i < players.size(); i++) {
       Player player = players.get(i);
       if (player.powerupDuration > 0) {
         player.powerupDuration -= 1;
       } else {
         player.powerup = 0;
       }
+      
+      if (i == 0) {
+        continue;
+      }
+      
       if (player.alive && player.client.available() > 0) {
         update = true;
         handlePlayer(player);
       }
     }
     
-    if (frameCount % int(framerate * speed) == 0 && players.get(0).alive) {
+    if (frameCount % int(framerate * speed) == 0 && players.get(0).alive && countdown == 0) {
       update = true;
       players.get(0).snake.move();
+    } else if (countdown > 0 && (frameCount + startFrame) % 60 == 0) {
+      countdown -= 1;
     }
     
     if (update) {
@@ -157,8 +167,12 @@ void draw() {
         
         for (int i = 0; i < powerups.size(); i++) {
           if (head.x == powerups.get(i).pos.get(0).x && head.y == powerups.get(i).pos.get(0).y) {
-            player.powerup = powerups.get(i).type;
-            player.powerupDuration = 300;
+            if (powerups.get(i).type == 4) {
+              player.snake.addTail += 5;
+            } else {
+              player.powerup = powerups.get(i).type;
+              player.powerupDuration = 300;
+            }
             powerups.remove(i);
           }
         }
@@ -193,6 +207,11 @@ void draw() {
     
     if (frameCount % framerate == 0) {
       updateClients();
+      for (Player player : players) {
+        if (player.powerup == 4) {
+          player.powerup = 0;
+        }
+      }
     }
     
     if (frameCount % (framerate * 30) == 0 && powerups.size() < powerupAmount) {
@@ -250,6 +269,8 @@ void mouseClicked() {
 
 
 void startGame() {
+  countdown = 3;
+  startFrame = frameCount + 1;
   final int reserved = 2;
   int nameLen = 0;
   for (Player p : players) {

@@ -15,6 +15,8 @@ int clientSnake;
 int framerate;
 int state;
 int[] DIM;
+int countdown;
+int startFrame;
 TextBox nameBox;
 Button readyButton;
 
@@ -91,9 +93,11 @@ void draw() {
       }
     }
     
-    if (frameCount % int(framerate * speed) == 0 && snakes.get(clientSnake).alive) {
+    if (frameCount % int(framerate * speed) == 0 && snakes.get(clientSnake).alive && countdown == 0) {
       snakes.get(clientSnake).move();
       updateServer();
+    } else if (countdown > 0 && (frameCount + startFrame) % 60 == 0) {
+      countdown -= 1;
     }
     
     if (client.available() > 0) {

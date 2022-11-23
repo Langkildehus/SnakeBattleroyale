@@ -61,7 +61,7 @@ void generatePowerup() {
     }
 
     if (!badPos) {
-      powerups.add(new Powerup(new PVector(x, y), round(random(1, 3))));
+      powerups.add(new Powerup(new PVector(x, y), round(random(1, 4))));
       break;
     }
   }
