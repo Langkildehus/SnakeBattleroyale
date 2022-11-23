@@ -80,14 +80,16 @@ void draw() {
     
     game.show();
     
-    game.draw(fruits, #FF0000);
+    game.draw(fruits, 0, #FF0000);
     for (Powerup powerup : powerups) {
-      game.draw(powerup.pos);
+      game.draw(powerup.pos, 0);
     }
     
+    int alive = 0;
     for (Snake snake : snakes) {
       if (snake.alive) {
-        game.draw(snake.body, snake.bodyColor, snake.headColor);
+        alive++;
+        game.draw(snake.body, snake.powerup, snake.bodyColor, snake.headColor);
         text(snake.name, (game.w / DIM[0]) * (snake.getHead().x + 0.5) + game.x,
                           (game.h / DIM[1]) * (snake.getHead().y - 0.5));
       }
@@ -103,6 +105,11 @@ void draw() {
     if (client.available() > 0) {
       handleInput();
     }
+    
+    
+    
+    fill(255);
+    text("Remaining: " + alive, width / 10, height / 10);
   }
 }
 

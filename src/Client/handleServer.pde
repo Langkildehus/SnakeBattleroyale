@@ -37,7 +37,6 @@ void handleInput() {
 void getPowerups(byte[] bytes, int nextByte) {
   powerups = new ArrayList<Powerup>();
   final int powerupAmount = int(bytes[nextByte]);
-  println(powerupAmount);
   nextByte++;
   
   for (int i = 0; i < powerupAmount; i++) {

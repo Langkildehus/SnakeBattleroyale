@@ -20,7 +20,7 @@ class Game {
     rect(this.x, this.y, this.w, this.h);
   }
   
-  void draw(ArrayList<PVector> points, color... c) {
+  void draw(ArrayList<PVector> points, int powerup, color... c) {
     
     final color c1 = c.length > 0 ? c[0] : 0;
     final color c2 = c.length > 1 ? c[1] : c1;
@@ -32,6 +32,13 @@ class Game {
     for (int i = 0; i < points.size(); i++) {
       if (i == points.size() - 1) {
         fill(c2);
+      }
+      if (powerup == 3) {
+        if (i % 2 == 0) {
+          fill(c1);
+        } else {
+          fill(c2);
+        }
       }
       rect(this.x + points.get(i).x * this.w / this.DIM[0], this.y + points.get(i).y * this.h / this.DIM[1], this.w / this.DIM[0], this.h / this.DIM[1]);
     }
