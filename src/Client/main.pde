@@ -92,6 +92,9 @@ void draw() {
         game.draw(snake.body, snake.powerup, snake.bodyColor, snake.headColor);
         text(snake.name, (game.w / DIM[0]) * (snake.getHead().x + 0.5) + game.x,
                           (game.h / DIM[1]) * (snake.getHead().y - 0.5));
+        
+        fill(255);
+        text(snake.name, width / 10, height / 20 * (alive + 4));
       }
     }
     
