@@ -97,6 +97,7 @@ void startGame() {
   }
   
   game = new Game(width / 2 - height / 2, 0, height, height, DIM);
+  snakes.get(clientSnake).move();
 }
 
 

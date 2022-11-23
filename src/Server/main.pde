@@ -314,4 +314,5 @@ void startGame() {
   final byte[] fbytes = concat(sbytes, colorBytes);
   
   server.write(fbytes);
+  players.get(0).snake.move();
 }
