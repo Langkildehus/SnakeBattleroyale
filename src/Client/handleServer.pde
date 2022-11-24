@@ -20,7 +20,7 @@ void handleInput() {
       getPowerups(bytes, nextByte);
     } else {
       // RESET
-      state = 0;
+      state = 1;
     }
   } else {
     // Update variables:
@@ -50,7 +50,7 @@ void getPowerups(byte[] bytes, int nextByte) {
 
 void startGame() {
   countdown = 3;
-  startFrame = frameCount + 1;
+  startFrame = frameCount + 30;
   final byte[] bytes = client.readBytes();
   if (int(bytes[0]) == 1) {
     state = 2;

@@ -94,7 +94,11 @@ void draw() {
                           (game.h / DIM[1]) * (snake.getHead().y - 0.5));
         
         fill(255);
-        text(snake.name, width / 10, height / 20 * (alive + 4));
+        textSize(32);
+        textAlign(LEFT);
+        text(snake.name + ": " + snake.body.size(), width / 20, height / 15 * (alive + 2));
+        textSize(48);
+        textAlign(CENTER);
       }
     }
     
@@ -109,10 +113,12 @@ void draw() {
       handleInput();
     }
     
-    
-    
     fill(255);
     text("Remaining: " + alive, width / 10, height / 10);
+    
+    if (countdown > 0) {
+      text(countdown, width / 2, height / 2);
+    }
   }
 }
 
