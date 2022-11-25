@@ -140,11 +140,12 @@ int getSnakes(byte[] bytes, int nextByte) {
 
 void updateServer() {
   ArrayList<PVector> snakeBody = snakes.get(clientSnake).body;
-  byte[] bytes = new byte[2 * snakes.get(clientSnake).body.size()];
+  byte[] bytes = new byte[2 * snakes.get(clientSnake).body.size() + 1];
   
   for (int i = 0; i < snakeBody.size(); i++) {
     bytes[2 * i] = byte(snakeBody.get(i).x);
     bytes[2 * i + 1] = byte(snakeBody.get(i).y);
   }
+  bytes[bytes.length - 1] = byte(255);
   client.write(bytes);
 }

@@ -78,11 +78,23 @@ void draw() {
       speed = 0.8f;
     }
     
+    if (client.available() > 0) {
+      handleInput();
+    }
+    
     game.show();
     
     game.draw(fruits, 0, #FF0000);
     for (Powerup powerup : powerups) {
       game.draw(powerup.pos, 0);
+    }
+    
+    if (frameCount % int(framerate * speed) == 0 && snakes.get(clientSnake).alive && countdown == 0) {
+      snakes.get(clientSnake).move();
+      updateServer();
+    } else if (countdown > 0 && (frameCount + startFrame) % 60 == 0) {
+      countdown -= 1;
+      updateServer();
     }
     
     int alive = 0;
@@ -100,17 +112,6 @@ void draw() {
         textSize(48);
         textAlign(CENTER);
       }
-    }
-    
-    if (frameCount % int(framerate * speed) == 0 && snakes.get(clientSnake).alive && countdown == 0) {
-      snakes.get(clientSnake).move();
-      updateServer();
-    } else if (countdown > 0 && (frameCount + startFrame) % 60 == 0) {
-      countdown -= 1;
-    }
-    
-    if (client.available() > 0) {
-      handleInput();
     }
     
     fill(255);
