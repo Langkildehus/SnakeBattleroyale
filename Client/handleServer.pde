@@ -1,11 +1,12 @@
 import java.util.Arrays;
 
 void handleInput() {
-  final byte[] bytes = client.readBytes();
-  int nextByte = 2;
-  if (int(bytes[0]) == 1) {
+  final byte[] rbytes = client.readBytes(2);
+  int nextByte = 0;
+  if (int(rbytes[0]) == 1) {
     // GAME LOOP
-    if (int(bytes[1]) == 0) {
+    if (int(rbytes[1]) == 0) {
+      final byte[] bytes = client.readBytes();
       // NO RESET
       
       // Update fruits
@@ -20,7 +21,7 @@ void handleInput() {
       getPowerups(bytes, nextByte);
     } else {
       // RESET
-      state = 1;
+      startGame();
     }
   } else {
     // Update variables:

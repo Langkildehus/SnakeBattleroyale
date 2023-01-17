@@ -197,13 +197,6 @@ void draw() {
               if (i == p) {
                 if (iter != player2.snake.body.size() - 1) {
                   player.alive = false;
-                  
-                  println("DIED TO YOURSELF:");
-                  println(head.x, head.y);
-                  println(body.x, body.y);
-                  println("Body piece:", iter);
-                  println("Snake length:", player.snake.body.size());
-                  println(player.snake.body);
                   break;
                 }
               } else {
