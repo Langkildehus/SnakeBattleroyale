@@ -72,6 +72,7 @@ void startGame(boolean forced) {
       snakes.add(new Snake(new PVector(-1, -1), DIM, #0000FF, #000099, name));
     }
     
+    fruits = new ArrayList<PVector>();
     // Recieve first fruit spawns
     for (int i = 0; i < fruitAmount; i++) {
       fruits.add(new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1])));
