@@ -1,7 +1,7 @@
 // Load packages
 import processing.net.*;
 
-final String IP = "10.130.145.130";
+final String IP = "10.130.145.118";
 final int PORT = 8080;
 
 // Declare global variables
