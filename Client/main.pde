@@ -63,7 +63,7 @@ void draw() {
     readyButton.draw();
     
     if (client.available() > 0) {
-      startGame();
+      startGame(false);
     }
     
   } else {

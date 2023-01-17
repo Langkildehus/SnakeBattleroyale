@@ -23,7 +23,7 @@ void handleInput() {
       getPowerups(bytes, nextByte);
     } else {
       // RESET
-      startGame();
+      startGame(true);
     }
   } else {
     // Update variables:
@@ -52,17 +52,18 @@ void getPowerups(byte[] bytes, int nextByte) {
 
 
 
-void startGame() {
-  snakes = new ArrayList<Snake>();
+void startGame(boolean forced) {
   countdown = 3;
   startFrame = frameCount + 30;
   final byte[] bytes = client.readBytes();
-  if (int(bytes[0]) == 1) {
+  if (int(bytes[0]) == 1 || forced) {
     state = 2;
     
     // Recieve names
-    int nextByte = 2;
-    final int playerCount = int(bytes[1]);
+    int nextByte = forced ? 0 : 2;
+    final int playerCount = forced ? snakes.size() : int(bytes[nextByte - 1]);
+    
+    snakes = new ArrayList<Snake>();
     for (int i = 0; i < playerCount; i++) {
       final int nameLength = int(bytes[nextByte]);
       nextByte++;
