@@ -1,12 +1,14 @@
 import java.util.Arrays;
 
 void handleInput() {
-  final byte[] rbytes = client.readBytes(2);
+  byte[] bytes = client.readBytes(1);
   int nextByte = 0;
-  if (int(rbytes[0]) == 1) {
+  if (int(bytes[0]) == 1) {
     // GAME LOOP
-    if (int(rbytes[1]) == 0) {
-      final byte[] bytes = client.readBytes();
+    bytes = client.readBytes(1);
+    
+    if (int(bytes[1]) == 0) {
+      bytes = client.readBytes();
       // NO RESET
       
       // Update fruits
@@ -25,11 +27,12 @@ void handleInput() {
     }
   } else {
     // Update variables:
-    fruitAmount = int(bytes[1]);
-    DIM[0] = int(bytes[2]);
-    DIM[1] = int(bytes[3]);
-    framerate = int(bytes[4]);
-    clientSnake = int(bytes[5]);
+    bytes = client.readBytes();
+    fruitAmount = int(bytes[0]);
+    DIM[0] = int(bytes[1]);
+    DIM[1] = int(bytes[2]);
+    framerate = int(bytes[3]);
+    clientSnake = int(bytes[4]);
   }
 }
 
