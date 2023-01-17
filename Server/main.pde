@@ -110,7 +110,10 @@ void draw() {
       bytes[4] = byte(framerate);
       bytes[5] = byte(players.size());
       player.write(bytes);
-      players.add(new Player(player));
+      Player p = new Player(player);
+      p.setKickButton(new Button(width, height, width / 25, height / 30, "KICK"));
+      p.kickButton.setOffset(10);
+      players.add(p);
     }
   } else if (state == 1) {
     // Game running
@@ -232,9 +235,11 @@ void draw() {
     }
     
     alive = 0;
+    String aliveName = "NAME NOT FOUND";
     for (Player player : players) {
       if (player.alive) {
         alive++;
+        aliveName = player.name;
         game.draw(player.snake.body, player.powerup, player.snake.bodyColor, player.snake.headColor);
         text(player.name, (game.w / DIM[0]) * (player.snake.getHead().x + 0.5) + game.x,
                           (game.h / DIM[1]) * (player.snake.getHead().y - 0.5));
@@ -242,9 +247,13 @@ void draw() {
         fill(255);
         textSize(32);
         textAlign(LEFT);
-        text(player.name + ": " + player.snake.body.size(), width / 20, height / 15 * (alive + 2));
-        textSize(48);
+        final float x =  width / 18;
+        final float y = height / 15 * (alive + 2);
+        text(player.name + ": " + player.snake.body.size(), x, y);
+        
         textAlign(CENTER);
+        player.drawKickButton(x / 5, y - x / 4);
+        textSize(48);
       }
     }
     
@@ -253,8 +262,13 @@ void draw() {
     
     if (countdown > 0) {
       text(countdown, width / 2, height / 2);
-    } else if (alive <= 0) {
+    } else if (alive <= 1) {
       restartButton.draw();
+      textSize(96);
+      fill(0, 255, 0);
+      text("WINNER WINNER CHICKEN DINNER", width / 2, height / 5);
+      textSize(144);
+      text(aliveName, width / 2, height / 3);
     }
   }
 }
@@ -287,11 +301,25 @@ void mouseClicked() {
       startGame();
       state = 1;
     }
-  } else if (state == 1 && alive <= 0 && countdown == 0) {
-    if (restartButton.hovering()) {
-      alive = 1;
-      generateLevel();
-      startGame();
+  } else if (state == 1) {
+    int i = -1;
+    for (Player player : players) {
+      if (player.kickButton != null && player.kickButton.hovering()) {
+        i = players.indexOf(player);
+        break;
+      }
+    }
+    
+    if (i > -1) {
+      players.remove(i);
+    }
+    
+    if (alive <= 1 && countdown == 0) {
+      if (restartButton.hovering()) {
+        alive = 1;
+        generateLevel();
+        startGame();
+      }
     }
   }
 }

@@ -98,9 +98,11 @@ void draw() {
     }
     
     int alive = 0;
+    String aliveName = "NAME NOT FOUND";
     for (Snake snake : snakes) {
       if (snake.alive) {
         alive++;
+        aliveName = snake.name;
         game.draw(snake.body, snake.powerup, snake.bodyColor, snake.headColor);
         text(snake.name, (game.w / DIM[0]) * (snake.getHead().x + 0.5) + game.x,
                           (game.h / DIM[1]) * (snake.getHead().y - 0.5));
@@ -108,7 +110,7 @@ void draw() {
         fill(255);
         textSize(32);
         textAlign(LEFT);
-        text(snake.name + ": " + snake.body.size(), width / 20, height / 15 * (alive + 2));
+        text(snake.name + ": " + snake.body.size(), width / 18, height / 15 * (alive + 2));
         textSize(48);
         textAlign(CENTER);
       }
@@ -116,6 +118,14 @@ void draw() {
     
     fill(255);
     text("Remaining: " + alive, width / 10, height / 10);
+    
+    if (alive <= 1) {
+      textSize(96);
+      fill(0, 255, 0);
+      text("WINNER WINNER CHICKEN DINNER", width / 2, height / 5);
+      textSize(144);
+      text(aliveName, width / 2, height / 3);
+    }
     
     if (countdown > 0) {
       text(countdown, width / 2, height / 2);

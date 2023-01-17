@@ -128,7 +128,7 @@ int getSnakes(byte[] bytes, int nextByte) {
       snake.body = new ArrayList<PVector>();
     }
     
-    while (int(bytes[nextByte]) != 255) {
+      while (int(bytes[nextByte]) != 255) {
       final PVector pos = new PVector(int(bytes[nextByte]), int(bytes[nextByte + 1]));
       if (i != clientSnake) {
         snake.body.add(pos);

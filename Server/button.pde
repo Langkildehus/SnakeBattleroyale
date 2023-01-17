@@ -5,6 +5,7 @@ class Button {
   int buttonHeight;
   String text;
   boolean toggle = false;
+  int offsety = 20;
   
   Button(int x, int y, int buttonWidth, int buttonHeight, String text) {
     this.x = x;
@@ -28,7 +29,16 @@ class Button {
     
     // Draw text
     fill(255);
-    text(this.text, this.x + this.buttonWidth / 2, this.y + this.buttonHeight / 2 + 20);
+    text(this.text, this.x + this.buttonWidth / 2, this.y + this.buttonHeight / 2 + this.offsety);
+  }
+  
+  void setPos(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+  
+  void setOffset(int offsety) {
+    this.offsety = offsety;
   }
 
   boolean hovering() {
