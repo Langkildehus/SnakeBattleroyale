@@ -7,7 +7,7 @@ void handleInput() {
     // GAME LOOP
     bytes = client.readBytes(1);
     
-    if (int(bytes[1]) == 0) {
+    if (int(bytes[0]) == 0) {
       bytes = client.readBytes();
       // NO RESET
       
@@ -53,6 +53,7 @@ void getPowerups(byte[] bytes, int nextByte) {
 
 
 void startGame() {
+  snakes = new ArrayList<Snake>();
   countdown = 3;
   startFrame = frameCount + 30;
   final byte[] bytes = client.readBytes();
