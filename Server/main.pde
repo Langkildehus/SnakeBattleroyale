@@ -314,7 +314,7 @@ void mouseClicked() {
       players.remove(i);
       byte[] bytes = new byte[3];
       bytes[0] = byte(1); // Tell client the message is for game loop
-      bytes[1] = byte(2); // Tell client a player has been kicked
+      bytes[1] = byte(-1); // Tell client a player has been kicked
       bytes[2] = byte(i); // Give client the kicked players id
       server.write(bytes);
     }
