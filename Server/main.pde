@@ -237,6 +237,7 @@ void draw() {
     alive = 0;
     String aliveName = "NAME NOT FOUND";
     for (Player player : players) {
+      textSize(32);
       if (player.alive) {
         alive++;
         aliveName = player.name;
@@ -245,7 +246,6 @@ void draw() {
                           (game.h / DIM[1]) * (player.snake.getHead().y - 0.5));
         
         fill(255);
-        textSize(32);
         textAlign(LEFT);
         final float x =  width / 18;
         final float y = height / 15 * (alive + 2);
@@ -314,7 +314,7 @@ void mouseClicked() {
       players.remove(i);
       byte[] bytes = new byte[3];
       bytes[0] = byte(1); // Tell client the message is for game loop
-      bytes[1] = byte(-1); // Tell client a player has been kicked
+      bytes[1] = byte(255); // Tell client a player has been kicked
       bytes[2] = byte(i); // Give client the kicked players id
       server.write(bytes);
     }

@@ -101,6 +101,7 @@ void draw() {
     String aliveName = "NAME NOT FOUND";
     for (Snake snake : snakes) {
       if (snake.alive) {
+        textSize(32);
         alive++;
         aliveName = snake.name;
         game.draw(snake.body, snake.powerup, snake.bodyColor, snake.headColor);
@@ -108,7 +109,6 @@ void draw() {
                           (game.h / DIM[1]) * (snake.getHead().y - 0.5));
         
         fill(255);
-        textSize(32);
         textAlign(LEFT);
         text(snake.name + ": " + snake.body.size(), width / 18, height / 15 * (alive + 2));
         textSize(48);

@@ -21,7 +21,7 @@ void handleInput() {
       nextByte = getSnakes(bytes, nextByte);
       
       getPowerups(bytes, nextByte);
-    } else if (int(bytes[0]) == -1) {
+    } else if (int(bytes[0]) == 255) {
       bytes = client.readBytes();
       // Player kicked
       final int id = int(bytes[0]);
