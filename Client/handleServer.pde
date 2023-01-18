@@ -21,9 +21,16 @@ void handleInput() {
       nextByte = getSnakes(bytes, nextByte);
       
       getPowerups(bytes, nextByte);
-    } else {
+    } else if (int(bytes[0]) == 1) {
       // RESET
       startGame(true);
+    } else if (int(bytes[0]) == 2) {
+      // Player kicked
+      final int id = int(bytes[1]);
+      snakes.remove(id);
+      if (clientSnake > id) {
+        clientSnake -= 1;
+      }
     }
   } else {
     // Update variables:
