@@ -92,7 +92,7 @@ void draw() {
     if (frameCount % int(framerate * speed) == 0 && snakes.get(clientSnake).alive && countdown == 0) {
       snakes.get(clientSnake).move();
       updateServer();
-    } else if (countdown > 0 && (frameCount + startFrame) % 60 == 0) {
+    } else if (countdown > 0 && (frameCount - startFrame) % 60 == 0) {
       countdown -= 1;
       updateServer();
     }

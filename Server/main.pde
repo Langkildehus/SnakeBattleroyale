@@ -150,7 +150,7 @@ void draw() {
     if (frameCount % int(framerate * speed) == 0 && players.get(0).alive && countdown == 0) {
       update = true;
       players.get(0).snake.move();
-    } else if (countdown > 0 && (frameCount + startFrame) % 60 == 0) {
+    } else if (countdown > 0 && (frameCount - startFrame) % 60 == 0) {
       countdown -= 1;
     }
     

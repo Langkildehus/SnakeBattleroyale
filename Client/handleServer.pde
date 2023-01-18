@@ -65,7 +65,7 @@ void getPowerups(byte[] bytes, int nextByte) {
 
 void startGame(boolean forced) {
   countdown = 3;
-  startFrame = frameCount + 30;
+  startFrame = frameCount;
   final byte[] bytes = client.readBytes();
   if (int(bytes[0]) == 1 || forced) {
     state = 2;
