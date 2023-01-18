@@ -25,8 +25,9 @@ void handleInput() {
       // RESET
       startGame(true);
     } else if (int(bytes[0]) == 2) {
+      bytes = client.readBytes();
       // Player kicked
-      final int id = int(bytes[1]);
+      final int id = int(bytes[0]);
       snakes.remove(id);
       if (clientSnake > id) {
         clientSnake -= 1;
